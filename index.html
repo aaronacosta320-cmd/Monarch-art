@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monarch Art — Commissions Open</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --off-white: #f0ece4;
+    --cream: #e8e0d0;
+    --red: #c0392b;
+    --red-bright: #e74c3c;
+    --gold: #b8962e;
+    --gold-light: #d4af50;
+    --gray: #555;
+    --gray-light: #999;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--red);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-trail {
+    position: fixed;
+    width: 30px; height: 30px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    opacity: 0.5;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(192,57,43,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(184,150,46,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Noise texture overlay */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3rem;
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid rgba(240,236,228,0.08);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--off-white);
+  }
+  .logo span {
+    color: var(--red);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold-light); }
+
+  .commission-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--red);
+    padding: 0.4rem 0.9rem;
+    animation: pulse-badge 2s infinite;
+  }
+  @keyframes pulse-badge {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 4rem 3rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    color: var(--off-white);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title .italic {
+    font-style: italic;
+    color: var(--cream);
+    font-weight: 400;
+  }
+  .hero-title .red { color: var(--red); }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--gray-light);
+    margin-top: 2rem;
+    max-width: 400px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--off-white);
+    padding: 1rem 2rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 1px solid var(--off-white);
+  }
+  .btn-primary:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--off-white);
+  }
+
+  .btn-ghost {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    background: transparent;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    border: 1px solid rgba(240,236,228,0.15);
+    transition: all 0.3s;
+  }
+  .btn-ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
+  .hero-number {
+    position: absolute;
+    right: 3rem;
+    bottom: 3rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 15rem;
+    font-weight: 900;
+    color: rgba(240,236,228,0.025);
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 3rem;
+    margin: 4rem 0 2rem;
+  }
+  .section-divider span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(184,150,46,0.4), transparent);
+  }
+
+  /* GALLERY */
+  .gallery-section {
+    padding: 0 2rem 6rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .art-card {
+    position: relative;
+    background: #111;
+    border: 1px solid rgba(240,236,228,0.06);
+    overflow: hidden;
+    cursor: none;
+    transition: border-color 0.4s;
+  }
+  .art-card:hover {
+    border-color: rgba(184,150,46,0.3);
+  }
+  .art-card.featured {
+    grid-column: span 2;
+  }
+
+  .art-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.85) contrast(1.05);
+    transition: all 0.6s ease;
+  }
+  .art-card.featured .art-img {
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .art-card:hover .art-img {
+    filter: brightness(0.95) contrast(1.1);
+    transform: scale(1.02);
+  }
+
+  .art-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+  }
+  .art-card:hover .art-overlay { opacity: 1; }
+
+  .art-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--off-white);
+    margin-bottom: 0.25rem;
+  }
+
+  .art-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--gray-light);
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+
+  .art-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .art-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+
+  .art-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid;
+  }
+  .art-badge.original {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+  .art-badge.print {
+    color: var(--gray-light);
+    border-color: var(--gray-light);
+  }
+  .art-badge.commission {
+    color: var(--red);
+    border-color: var(--red);
+  }
+
+  /* Corner tag siempre visible */
+  .price-tag {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(184,150,46,0.4);
+    padding: 0.4rem 0.7rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold-light);
+  }
+
+  /* COMMISSIONS */
+  .commissions-section {
+    background: #0d0d0d;
+    border-top: 1px solid rgba(240,236,228,0.06);
+    border-bottom: 1px solid rgba(240,236,228,0.06);
+    padding: 5rem 3rem;
+  }
+
+  .commissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: rgba(240,236,228,0.06);
+    margin-top: 3rem;
+  }
+
+  .commission-tier {
+    background: #0d0d0d;
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .commission-tier:hover { background: #111; }
+  .commission-tier.popular {
+    background: #111;
+  }
+  .commission-tier.popular::before {
+    content: 'MÁS POPULAR';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.45rem;
+    letter-spacing: 0.2em;
+    color: var(--black);
+    background: var(--gold);
+    padding: 0.25rem 0.5rem;
+  }
+
+  .tier-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    margin-bottom: 1rem;
+  }
+
+  .tier-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--off-white);
+    margin-bottom: 0.25rem;
+  }
+  .tier-price-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--gray-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .tier-features {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+  .tier-features li {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--gray-light);
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(240,236,228,0.05);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .tier-features li::before {
+    content: '—';
+    color: var(--gold);
+    font-size: 0.7rem;
+  }
+
+  .btn-tier {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.9rem;
+    text-decoration: none;
+    border: 1px solid rgba(240,236,228,0.15);
+    color: var(--gray-light);
+    transition: all 0.3s;
+  }
+  .btn-tier:hover {
+    border-color: var(--red);
+    color: var(--off-white);
+    background: rgba(192,57,43,0.1);
+  }
+  .commission-tier.popular .btn-tier {
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+  .commission-tier.popular .btn-tier:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ABOUT */
+  .about-section {
+    padding: 6rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--off-white);
+    margin-bottom: 2rem;
+  }
+  .about-text h2 em {
+    font-style: italic;
+    color: var(--red);
+  }
+
+  .about-text p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--gray-light);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(240,236,228,0.06);
+    margin-top: 3rem;
+  }
+
+  .stat {
+    background: var(--black);
+    padding: 1.5rem;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    margin-top: 0.25rem;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+  .about-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--off-white);
+    line-height: 1.4;
+    padding: 3rem;
+    border: 1px solid rgba(240,236,228,0.08);
+    position: relative;
+  }
+  .about-quote::before {
+    content: '"';
+    position: absolute;
+    top: -1.5rem;
+    left: 2rem;
+    font-size: 8rem;
+    color: var(--red);
+    opacity: 0.3;
+    line-height: 1;
+    font-family: 'Playfair Display', serif;
+  }
+  .quote-attr {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 1.5rem;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: #050505;
+    padding: 6rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-section::before {
+    content: 'MONARCH';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 18vw;
+    font-weight: 900;
+    color: rgba(240,236,228,0.02);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .contact-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    color: var(--off-white);
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .contact-section p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--gray-light);
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .contact-methods {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .contact-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--off-white);
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border: 1px solid rgba(240,236,228,0.15);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .contact-link:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .contact-link .icon { font-size: 1rem; }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid rgba(240,236,228,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--off-white);
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    color: var(--gray-light);
+  }
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--gray-light);
+  }
+
+  /* Scrolling ticker */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid rgba(240,236,228,0.06);
+    border-bottom: 1px solid rgba(240,236,228,0.06);
+    padding: 0.75rem 0;
+    background: #080808;
+  }
+  .ticker {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 25s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    padding: 0 3rem;
+  }
+  .ticker-item span { color: var(--gold); }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .nav-links { display: none; }
+    .hero-content { padding: 3rem 1.5rem; }
+    .gallery-section { padding: 0 1rem 4rem; }
+    .art-card.featured { grid-column: span 1; }
+    .commissions-section { padding: 4rem 1.5rem; }
+    .commissions-grid { grid-template-columns: 1fr; }
+    .about-section { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
+    .contact-section { padding: 4rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <nav>
+    <div class="logo">MONARCH<span>.</span>ART</div>
+    <ul class="nav-links">
+      <li><a href="#gallery">Galería</a></li>
+      <li><a href="#commissions">Comisiones</a></li>
+      <li><a href="#about">Acerca</a></li>
+      <li><a href="#contact">Contacto</a></li>
+    </ul>
+    <div class="commission-badge">✦ Commissions Open</div>
+  </nav>
+
+  <div class="hero-content">
+    <div class="hero-tag">✦ Arte Original — Pinal de Amoles, Qro.</div>
+    <h1 class="hero-title">
+      MON<br><span class="italic red">arch</span><br>ART
+    </h1>
+    <p class="hero-sub">Dibujo a lápiz, color y comisiones personalizadas. Donde la oscuridad y la belleza se encuentran en el papel.</p>
+    <div class="hero-cta">
+      <a href="#commissions" class="btn-primary">Ver Comisiones</a>
+      <a href="#gallery" class="btn-ghost">Ver Galería</a>
+    </div>
+  </div>
+
+  <div class="hero-number">M</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">Dibujo Original <span>✦</span></span>
+    <span class="ticker-item">Retratos a Lápiz <span>✦</span></span>
+    <span class="ticker-item">Arte Oscuro <span>✦</span></span>
+    <span class="ticker-item">Comisiones Abiertas <span>✦</span></span>
+    <span class="ticker-item">Anime Style <span>✦</span></span>
+    <span class="ticker-item">Diseño de Autos <span>✦</span></span>
+    <span class="ticker-item">Retratos Personalizados <span>✦</span></span>
+    <span class="ticker-item">Sierra Gorda, México <span>✦</span></span>
+    <!-- repeat for seamless loop -->
+    <span class="ticker-item">Dibujo Original <span>✦</span></span>
+    <span class="ticker-item">Retratos a Lápiz <span>✦</span></span>
+    <span class="ticker-item">Arte Oscuro <span>✦</span></span>
+    <span class="ticker-item">Comisiones Abiertas <span>✦</span></span>
+    <span class="ticker-item">Anime Style <span>✦</span></span>
+    <span class="ticker-item">Diseño de Autos <span>✦</span></span>
+    <span class="ticker-item">Retratos Personalizados <span>✦</span></span>
+    <span class="ticker-item">Sierra Gorda, México <span>✦</span></span>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery-section">
+  <div class="section-divider">
+    <span>✦ Trabajos Originales</span>
+    <div class="divider-line"></div>
+    <span>Portafolio</span>
+  </div>
+
+  <div class="gallery-grid">
+
+    <!-- Skull + crown (IMG 10) - FEATURED -->
+    <div class="art-card featured">
+      <img src="/mnt/user-data/uploads/1000257084.jpg" alt="Crown of Thorns" class="art-img">
+      <div class="price-tag">$200 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">Crown of Sorrows</div>
+        <div class="art-desc">Lápiz + tinta roja · Técnica mixta · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$200 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Angel draped (IMG 11) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000257079.jpg" alt="Ángel" class="art-img">
+      <div class="price-tag">$180 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">Ascensión</div>
+        <div class="art-desc">Lápiz grafito · A4 · Alto detalle en telas</div>
+        <div class="art-price-row">
+          <span class="art-price">$180 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horror face (IMG 2) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000269316.jpg" alt="Dark Portrait" class="art-img">
+      <div class="price-tag">$150 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">Duality</div>
+        <div class="art-desc">Grafito · Retrato oscuro · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$150 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jesus (IMG 7) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000226826.jpg" alt="Cristo" class="art-img">
+      <div class="price-tag">$160 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">Ecce Homo</div>
+        <div class="art-desc">Grafito · Retrato religioso · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$160 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Car scene (IMG 4) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000254458.jpg" alt="Car Scene" class="art-img">
+      <div class="price-tag">$130 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">Neon Garage</div>
+        <div class="art-desc">Grafito · Escena de auto · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$130 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Anime mage (IMG 8) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000215961.jpg" alt="Mage" class="art-img">
+      <div class="price-tag">$200 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">La Maga</div>
+        <div class="art-desc">Lápices de color · Anime style · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$200 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark creature (IMG 9) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000200164.jpg" alt="Creature" class="art-img">
+      <div class="price-tag">$120 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">Despertar</div>
+        <div class="art-desc">Grafito · Criatura oscura · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$120 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Racing car (IMG 5) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000254117.jpg" alt="Racing Car" class="art-img">
+      <div class="price-tag">$100 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">GT Sketch</div>
+        <div class="art-desc">Grafito · Auto de carreras · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$100 MXN</span>
+          <span class="art-badge original">Original</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Moto (IMG 1) -->
+    <div class="art-card">
+      <img src="/mnt/user-data/uploads/1000269318.jpg" alt="Moto" class="art-img">
+      <div class="price-tag">$80 MXN</div>
+      <div class="art-overlay">
+        <div class="art-title">Speed Draft</div>
+        <div class="art-desc">Grafito · Boceto de moto · A4</div>
+        <div class="art-price-row">
+          <span class="art-price">$80 MXN</span>
+          <span class="art-badge print">Boceto</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMMISSIONS -->
+<section id="commissions" class="commissions-section">
+  <div class="section-divider">
+    <span>✦ Comisiones</span>
+    <div class="divider-line"></div>
+    <span>Precios</span>
+  </div>
+
+  <div class="commissions-grid">
+
+    <div class="commission-tier">
+      <div class="tier-name">Boceto</div>
+      <div class="tier-price">$50</div>
+      <div class="tier-price-sub">MXN por pieza</div>
+      <ul class="tier-features">
+        <li>Lápiz grafito</li>
+        <li>1 personaje / objeto</li>
+        <li>Sin fondo complejo</li>
+        <li>Formato A5</li>
+        <li>Entrega digital + física</li>
+      </ul>
+      <a href="#contact" class="btn-tier">Solicitar</a>
+    </div>
+
+    <div class="commission-tier popular">
+      <div class="tier-name">Retrato</div>
+      <div class="tier-price">$120</div>
+      <div class="tier-price-sub">MXN por pieza</div>
+      <ul class="tier-features">
+        <li>Grafito detallado</li>
+        <li>Busto o medio cuerpo</li>
+        <li>Fondo simple</li>
+        <li>Formato A4</li>
+        <li>Alta calidad de acabado</li>
+      </ul>
+      <a href="#contact" class="btn-tier">Solicitar</a>
+    </div>
+
+    <div class="commission-tier">
+      <div class="tier-name">Full Piece</div>
+      <div class="tier-price">$180</div>
+      <div class="tier-price-sub">MXN por pieza</div>
+      <ul class="tier-features">
+        <li>Grafito o color</li>
+        <li>Cuerpo completo</li>
+        <li>Fondo elaborado</li>
+        <li>Formato A4</li>
+        <li>Revisiones incluidas</li>
+      </ul>
+      <a href="#contact" class="btn-tier">Solicitar</a>
+    </div>
+
+    <div class="commission-tier">
+      <div class="tier-name">Arte Oscuro</div>
+      <div class="tier-price">$200</div>
+      <div class="tier-price-sub">MXN por pieza</div>
+      <ul class="tier-features">
+        <li>Tema gore / horror</li>
+        <li>Composición libre</li>
+        <li>Técnica mixta opcional</li>
+        <li>Formato A4</li>
+        <li>Concepto único</li>
+      </ul>
+      <a href="#contact" class="btn-tier">Solicitar</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="about-text">
+    <h2>El arte<br>es <em>oscuro</em><br>y honesto.</h2>
+    <p>Artista independiente de la Sierra Gorda de Querétaro. Trabajo principalmente con grafito y lápices de color, explorando el retrato, el diseño automotriz y la ilustración oscura.</p>
+    <p>Cada pieza es hecha a mano, desde el boceto hasta el acabado final. Sin atajos, sin prints genéricos — arte real con identidad propia.</p>
+    <div class="about-stats">
+      <div class="stat">
+        <div class="stat-num">11+</div>
+        <div class="stat-label">Piezas en portafolio</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Años dibujando</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Hecho a mano</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">✦</div>
+        <div class="stat-label">Commissions Open</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-visual">
+    <div class="about-quote">
+      El papel no miente. Cada trazo es una decisión — y cada sombra, una verdad.
+      <div class="quote-attr">— Monarch Art</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="section-divider" style="justify-content:center; margin-bottom:2rem;">
+    <span>✦ Contacto</span>
+  </div>
+  <h2>¿Quieres una pieza?</h2>
+  <p>Escríbeme directamente. Cuéntame qué tienes en mente y lo hacemos realidad.</p>
+  <div class="contact-methods">
+    <a href="https://instagram.com/" class="contact-link" target="_blank">
+      <span class="icon">📷</span> Instagram
+    </a>
+    <a href="https://tiktok.com/" class="contact-link" target="_blank">
+      <span class="icon">🎵</span> TikTok
+    </a>
+    <a href="https://wa.me/52" class="contact-link" target="_blank">
+      <span class="icon">💬</span> WhatsApp
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MONARCH<span style="color:var(--red)">.</span>ART</div>
+  <div class="footer-tagline">Pinal de Amoles, Querétaro · Sierra Gorda</div>
+  <div class="footer-copy">© 2026 Monarch Art — Todos los derechos reservados</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursorTrail');
+  let mx = 0, my = 0, tx = 0, ty = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animTrail() {
+    tx += (mx - tx) * 0.12;
+    ty += (my - ty) * 0.12;
+    trail.style.left = tx - 15 + 'px';
+    trail.style.top = ty - 15 + 'px';
+    requestAnimationFrame(animTrail);
+  }
+  animTrail();
+
+  // Hover effect on cards
+  document.querySelectorAll('.art-card, .btn-primary, .btn-ghost, .btn-tier, .contact-link').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      trail.style.transform = 'scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      trail.style.transform = 'scale(1)';
+    });
+  });
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.art-card, .commission-tier, .stat').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
