@@ -3,1108 +3,653 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monarch Art — Commissions Open</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<title>AJEDREZ</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Crimson+Text:ital@0;1&display=swap');
 
   :root {
-    --black: #0a0a0a;
-    --off-white: #f0ece4;
-    --cream: #e8e0d0;
-    --red: #c0392b;
-    --red-bright: #e74c3c;
-    --gold: #b8962e;
-    --gold-light: #d4af50;
-    --gray: #555;
-    --gray-light: #999;
+    --gold: #c9a84c;
+    --gold2: #e8cc7a;
+    --dark: #0d0a07;
+    --board-light: #f0d9b5;
+    --board-dark: #b58863;
+    --selected: rgba(106,168,79,0.8);
+    --move: rgba(106,168,79,0.5);
+    --check: rgba(220,50,50,0.7);
+    --panel: #1a1410;
   }
 
-  html { scroll-behavior: smooth; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--black);
-    color: var(--off-white);
-    font-family: 'Cormorant Garamond', serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* Custom cursor */
-  .cursor {
-    position: fixed;
-    width: 12px; height: 12px;
-    background: var(--red);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.1s ease;
-    mix-blend-mode: difference;
-  }
-  .cursor-trail {
-    position: fixed;
-    width: 30px; height: 30px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.15s ease;
-    opacity: 0.5;
-  }
-
-  /* HERO */
-  .hero {
+    background: #0d0a07;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(60,40,10,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(60,40,10,0.4) 0%, transparent 60%);
     min-height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 20% 50%, rgba(192,57,43,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(184,150,46,0.06) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  /* Noise texture overlay */
-  .hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    opacity: 0.3;
-  }
-
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 3rem;
-    position: relative;
-    z-index: 10;
-    border-bottom: 1px solid rgba(240,236,228,0.08);
-  }
-
-  .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    font-weight: 900;
-    letter-spacing: 0.15em;
-    color: var(--off-white);
-  }
-  .logo span {
-    color: var(--red);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gray-light);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover { color: var(--gold-light); }
-
-  .commission-badge {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--black);
-    background: var(--red);
-    padding: 0.4rem 0.9rem;
-    animation: pulse-badge 2s infinite;
-  }
-  @keyframes pulse-badge {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.75; }
-  }
-
-  .hero-content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: flex-start;
-    padding: 4rem 3rem;
-    position: relative;
-    z-index: 5;
-  }
-
-  .hero-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
+    padding: 20px 10px;
+    font-family: 'Cinzel', serif;
     color: var(--gold);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.2s forwards;
   }
 
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(4rem, 12vw, 10rem);
-    font-weight: 900;
-    line-height: 0.85;
-    letter-spacing: -0.02em;
-    color: var(--off-white);
-    opacity: 0;
-    animation: fadeUp 0.8s 0.4s forwards;
-  }
-  .hero-title .italic {
-    font-style: italic;
-    color: var(--cream);
-    font-weight: 400;
-  }
-  .hero-title .red { color: var(--red); }
-
-  .hero-sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-style: italic;
-    color: var(--gray-light);
-    margin-top: 2rem;
-    max-width: 400px;
-    line-height: 1.6;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.6s forwards;
-  }
-
-  .hero-cta {
-    margin-top: 3rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.8s forwards;
-  }
-
-  .btn-primary {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--black);
-    background: var(--off-white);
-    padding: 1rem 2rem;
-    text-decoration: none;
-    transition: all 0.3s;
-    border: 1px solid var(--off-white);
-  }
-  .btn-primary:hover {
-    background: var(--red);
-    border-color: var(--red);
-    color: var(--off-white);
-  }
-
-  .btn-ghost {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gray-light);
-    background: transparent;
-    padding: 1rem 2rem;
-    text-decoration: none;
-    border: 1px solid rgba(240,236,228,0.15);
-    transition: all 0.3s;
-  }
-  .btn-ghost:hover {
-    border-color: var(--gold);
-    color: var(--gold-light);
-  }
-
-  .hero-number {
-    position: absolute;
-    right: 3rem;
-    bottom: 3rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 15rem;
-    font-weight: 900;
-    color: rgba(240,236,228,0.025);
-    line-height: 1;
-    user-select: none;
-    pointer-events: none;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* DIVIDER */
-  .section-divider {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0 3rem;
-    margin: 4rem 0 2rem;
-  }
-  .section-divider span {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
+  h1 {
+    font-size: 1.8rem;
+    letter-spacing: 8px;
     color: var(--gold);
-    white-space: nowrap;
-  }
-  .divider-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, rgba(184,150,46,0.4), transparent);
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    margin-bottom: 6px;
   }
 
-  /* GALLERY */
-  .gallery-section {
-    padding: 0 2rem 6rem;
-  }
-
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .art-card {
-    position: relative;
-    background: #111;
-    border: 1px solid rgba(240,236,228,0.06);
-    overflow: hidden;
-    cursor: none;
-    transition: border-color 0.4s;
-  }
-  .art-card:hover {
-    border-color: rgba(184,150,46,0.3);
-  }
-  .art-card.featured {
-    grid-column: span 2;
-  }
-
-  .art-img {
-    width: 100%;
-    aspect-ratio: 3/4;
-    object-fit: cover;
-    display: block;
-    filter: brightness(0.85) contrast(1.05);
-    transition: all 0.6s ease;
-  }
-  .art-card.featured .art-img {
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    object-position: center top;
-  }
-  .art-card:hover .art-img {
-    filter: brightness(0.95) contrast(1.1);
-    transform: scale(1.02);
-  }
-
-  .art-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.4s;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 1.5rem;
-  }
-  .art-card:hover .art-overlay { opacity: 1; }
-
-  .art-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
+  .subtitle {
+    font-family: 'Crimson Text', serif;
     font-style: italic;
-    color: var(--off-white);
-    margin-bottom: 0.25rem;
-  }
-
-  .art-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.85rem;
-    color: var(--gray-light);
-    margin-bottom: 0.75rem;
-    font-style: italic;
-  }
-
-  .art-price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .art-price {
-    font-family: 'Space Mono', monospace;
-    font-size: 1rem;
-    color: var(--gold-light);
-    font-weight: 700;
-  }
-
-  .art-badge {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.5rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 0.3rem 0.6rem;
-    border: 1px solid;
-  }
-  .art-badge.original {
-    color: var(--gold);
-    border-color: var(--gold);
-  }
-  .art-badge.print {
-    color: var(--gray-light);
-    border-color: var(--gray-light);
-  }
-  .art-badge.commission {
-    color: var(--red);
-    border-color: var(--red);
-  }
-
-  /* Corner tag siempre visible */
-  .price-tag {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: rgba(0,0,0,0.8);
-    border: 1px solid rgba(184,150,46,0.4);
-    padding: 0.4rem 0.7rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--gold-light);
-  }
-
-  /* COMMISSIONS */
-  .commissions-section {
-    background: #0d0d0d;
-    border-top: 1px solid rgba(240,236,228,0.06);
-    border-bottom: 1px solid rgba(240,236,228,0.06);
-    padding: 5rem 3rem;
-  }
-
-  .commissions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1px;
-    background: rgba(240,236,228,0.06);
-    margin-top: 3rem;
-  }
-
-  .commission-tier {
-    background: #0d0d0d;
-    padding: 2.5rem 2rem;
-    position: relative;
-    transition: background 0.3s;
-  }
-  .commission-tier:hover { background: #111; }
-  .commission-tier.popular {
-    background: #111;
-  }
-  .commission-tier.popular::before {
-    content: 'MÁS POPULAR';
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.45rem;
-    letter-spacing: 0.2em;
-    color: var(--black);
-    background: var(--gold);
-    padding: 0.25rem 0.5rem;
-  }
-
-  .tier-name {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gray-light);
-    margin-bottom: 1rem;
-  }
-
-  .tier-price {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: var(--off-white);
-    margin-bottom: 0.25rem;
-  }
-  .tier-price-sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.85rem;
-    font-style: italic;
-    color: var(--gray-light);
-    margin-bottom: 1.5rem;
-  }
-
-  .tier-features {
-    list-style: none;
-    margin-bottom: 2rem;
-  }
-  .tier-features li {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    color: var(--gray-light);
-    padding: 0.4rem 0;
-    border-bottom: 1px solid rgba(240,236,228,0.05);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .tier-features li::before {
-    content: '—';
-    color: var(--gold);
-    font-size: 0.7rem;
-  }
-
-  .btn-tier {
-    display: block;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 0.9rem;
-    text-decoration: none;
-    border: 1px solid rgba(240,236,228,0.15);
-    color: var(--gray-light);
-    transition: all 0.3s;
-  }
-  .btn-tier:hover {
-    border-color: var(--red);
-    color: var(--off-white);
-    background: rgba(192,57,43,0.1);
-  }
-  .commission-tier.popular .btn-tier {
-    border-color: var(--gold);
-    color: var(--gold-light);
-  }
-  .commission-tier.popular .btn-tier:hover {
-    background: var(--gold);
-    color: var(--black);
-  }
-
-  /* ABOUT */
-  .about-section {
-    padding: 6rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: center;
-  }
-
-  .about-text h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 900;
-    line-height: 1;
-    color: var(--off-white);
-    margin-bottom: 2rem;
-  }
-  .about-text h2 em {
-    font-style: italic;
-    color: var(--red);
-  }
-
-  .about-text p {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
-    font-style: italic;
-    color: var(--gray-light);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-  }
-
-  .about-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: rgba(240,236,228,0.06);
-    margin-top: 3rem;
-  }
-
-  .stat {
-    background: var(--black);
-    padding: 1.5rem;
-  }
-
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: var(--gold-light);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gray-light);
-    margin-top: 0.25rem;
-  }
-
-  .about-visual {
-    position: relative;
-  }
-  .about-quote {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--off-white);
-    line-height: 1.4;
-    padding: 3rem;
-    border: 1px solid rgba(240,236,228,0.08);
-    position: relative;
-  }
-  .about-quote::before {
-    content: '"';
-    position: absolute;
-    top: -1.5rem;
-    left: 2rem;
-    font-size: 8rem;
-    color: var(--red);
-    opacity: 0.3;
-    line-height: 1;
-    font-family: 'Playfair Display', serif;
-  }
-  .quote-attr {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 1.5rem;
-  }
-
-  /* CONTACT */
-  .contact-section {
-    background: #050505;
-    padding: 6rem 3rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .contact-section::before {
-    content: 'MONARCH';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Playfair Display', serif;
-    font-size: 18vw;
-    font-weight: 900;
-    color: rgba(240,236,228,0.02);
-    white-space: nowrap;
-    pointer-events: none;
-  }
-
-  .contact-section h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 900;
-    color: var(--off-white);
-    margin-bottom: 1rem;
-    position: relative;
-  }
-  .contact-section p {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-style: italic;
-    color: var(--gray-light);
-    margin-bottom: 3rem;
-    position: relative;
-  }
-
-  .contact-methods {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    position: relative;
-  }
-
-  .contact-link {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--off-white);
-    text-decoration: none;
-    padding: 1rem 2rem;
-    border: 1px solid rgba(240,236,228,0.15);
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .contact-link:hover {
-    border-color: var(--red);
-    color: var(--red);
-  }
-  .contact-link .icon { font-size: 1rem; }
-
-  /* FOOTER */
-  footer {
-    padding: 2rem 3rem;
-    border-top: 1px solid rgba(240,236,228,0.06);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .footer-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: 0.15em;
-    color: var(--off-white);
-  }
-  .footer-copy {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
-    color: var(--gray-light);
-  }
-  .footer-tagline {
-    font-family: 'Cormorant Garamond', serif;
+    color: #6a5a3a;
     font-size: 0.9rem;
-    font-style: italic;
-    color: var(--gray-light);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
   }
 
-  /* Scrolling ticker */
-  .ticker-wrap {
-    overflow: hidden;
-    border-top: 1px solid rgba(240,236,228,0.06);
-    border-bottom: 1px solid rgba(240,236,228,0.06);
-    padding: 0.75rem 0;
-    background: #080808;
-  }
-  .ticker {
+  .game-wrap {
     display: flex;
-    white-space: nowrap;
-    animation: ticker 25s linear infinite;
-  }
-  .ticker-item {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gray-light);
-    padding: 0 3rem;
-  }
-  .ticker-item span { color: var(--gold); }
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    nav { padding: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .nav-links { display: none; }
-    .hero-content { padding: 3rem 1.5rem; }
-    .gallery-section { padding: 0 1rem 4rem; }
-    .art-card.featured { grid-column: span 1; }
-    .commissions-section { padding: 4rem 1.5rem; }
-    .commissions-grid { grid-template-columns: 1fr; }
-    .about-section { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
-    .contact-section { padding: 4rem 1.5rem; }
-    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
+  .board-container {
+    position: relative;
   }
+
+  .coords-wrap {
+    display: flex;
+  }
+
+  .coord-files {
+    display: flex;
+    padding-left: 24px;
+    margin-bottom: 3px;
+  }
+
+  .coord-files span, .coord-ranks span {
+    font-size: 0.6rem;
+    color: #6a5a3a;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  .coord-files span { width: 56px; }
+
+  .coord-ranks {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 0 4px;
+  }
+
+  .coord-ranks span { height: 56px; display: flex; align-items: center; }
+
+  #board {
+    display: grid;
+    grid-template-columns: repeat(8, 56px);
+    grid-template-rows: repeat(8, 56px);
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 40px rgba(201,168,76,0.3), inset 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  .cell {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: filter 0.1s;
+    font-size: 2rem;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cell.light { background: var(--board-light); }
+  .cell.dark  { background: var(--board-dark); }
+  .cell.selected { background: var(--selected) !important; }
+  .cell.movable::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.25);
+  }
+  .cell.movable.has-piece::after {
+    width: 52px; height: 52px;
+    border-radius: 0;
+    background: transparent;
+    border: 4px solid rgba(0,0,0,0.25);
+  }
+  .cell.in-check { background: var(--check) !important; }
+
+  .piece {
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.6));
+    pointer-events: none;
+  }
+
+  /* Panel lateral */
+  .panel {
+    background: var(--panel);
+    border: 1px solid #3a2e1a;
+    border-radius: 4px;
+    padding: 16px;
+    width: 180px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .status-box {
+    text-align: center;
+  }
+
+  .turn-label {
+    font-size: 0.5rem;
+    letter-spacing: 3px;
+    color: #6a5a3a;
+    margin-bottom: 6px;
+  }
+
+  .turn-value {
+    font-size: 0.75rem;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(201,168,76,0.4);
+  }
+
+  .msg-box {
+    background: rgba(201,168,76,0.07);
+    border: 1px solid #3a2e1a;
+    border-radius: 3px;
+    padding: 8px;
+    font-family: 'Crimson Text', serif;
+    font-size: 0.85rem;
+    color: #a08040;
+    min-height: 40px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .btn {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.5rem;
+    padding: 8px 12px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.15s;
+    width: 100%;
+  }
+
+  .btn:hover {
+    background: var(--gold);
+    color: var(--dark);
+  }
+
+  .captured {
+    font-size: 0.5rem;
+    color: #6a5a3a;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .cap-pieces {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    min-height: 24px;
+    word-break: break-all;
+  }
+
+  .promotion-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .promotion-modal.show { display: flex; }
+
+  .promotion-modal h3 {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+
+  .promo-choices {
+    display: flex;
+    gap: 12px;
+  }
+
+  .promo-btn {
+    width: 70px; height: 70px;
+    background: var(--panel);
+    border: 2px solid var(--gold);
+    font-size: 2.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+  }
+
+  .promo-btn:hover { background: rgba(201,168,76,0.2); }
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-trail" id="cursorTrail"></div>
+<h1>AJEDREZ</h1>
+<p class="subtitle">the royal game</p>
 
-<!-- HERO -->
-<section class="hero">
-  <nav>
-    <div class="logo">MONARCH<span>.</span>ART</div>
-    <ul class="nav-links">
-      <li><a href="#gallery">Galería</a></li>
-      <li><a href="#commissions">Comisiones</a></li>
-      <li><a href="#about">Acerca</a></li>
-      <li><a href="#contact">Contacto</a></li>
-    </ul>
-    <div class="commission-badge">✦ Commissions Open</div>
-  </nav>
+<div class="game-wrap">
 
-  <div class="hero-content">
-    <div class="hero-tag">✦ Arte Original — Pinal de Amoles, Qro.</div>
-    <h1 class="hero-title">
-      MON<br><span class="italic red">arch</span><br>ART
-    </h1>
-    <p class="hero-sub">Dibujo a lápiz, color y comisiones personalizadas. Donde la oscuridad y la belleza se encuentran en el papel.</p>
-    <div class="hero-cta">
-      <a href="#commissions" class="btn-primary">Ver Comisiones</a>
-      <a href="#gallery" class="btn-ghost">Ver Galería</a>
+  <div>
+    <div class="coord-files" id="files"></div>
+    <div class="coords-wrap">
+      <div class="coord-ranks" id="ranks"></div>
+      <div id="board"></div>
     </div>
   </div>
 
-  <div class="hero-number">M</div>
-</section>
-
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker">
-    <span class="ticker-item">Dibujo Original <span>✦</span></span>
-    <span class="ticker-item">Retratos a Lápiz <span>✦</span></span>
-    <span class="ticker-item">Arte Oscuro <span>✦</span></span>
-    <span class="ticker-item">Comisiones Abiertas <span>✦</span></span>
-    <span class="ticker-item">Anime Style <span>✦</span></span>
-    <span class="ticker-item">Diseño de Autos <span>✦</span></span>
-    <span class="ticker-item">Retratos Personalizados <span>✦</span></span>
-    <span class="ticker-item">Sierra Gorda, México <span>✦</span></span>
-    <!-- repeat for seamless loop -->
-    <span class="ticker-item">Dibujo Original <span>✦</span></span>
-    <span class="ticker-item">Retratos a Lápiz <span>✦</span></span>
-    <span class="ticker-item">Arte Oscuro <span>✦</span></span>
-    <span class="ticker-item">Comisiones Abiertas <span>✦</span></span>
-    <span class="ticker-item">Anime Style <span>✦</span></span>
-    <span class="ticker-item">Diseño de Autos <span>✦</span></span>
-    <span class="ticker-item">Retratos Personalizados <span>✦</span></span>
-    <span class="ticker-item">Sierra Gorda, México <span>✦</span></span>
+  <div class="panel">
+    <div class="status-box">
+      <div class="turn-label">TURNO</div>
+      <div class="turn-value" id="turnDisplay">♔ BLANCAS</div>
+    </div>
+    <div class="msg-box" id="msgBox">Selecciona una pieza</div>
+    <div>
+      <div class="captured">CAPTURADAS</div>
+      <div class="cap-pieces" id="capWhite"></div>
+      <div class="cap-pieces" id="capBlack"></div>
+    </div>
+    <button class="btn" id="resetBtn">↺ NUEVA PARTIDA</button>
   </div>
+
 </div>
 
-<!-- GALLERY -->
-<section id="gallery" class="gallery-section">
-  <div class="section-divider">
-    <span>✦ Trabajos Originales</span>
-    <div class="divider-line"></div>
-    <span>Portafolio</span>
-  </div>
-
-  <div class="gallery-grid">
-
-    <!-- Skull + crown (IMG 10) - FEATURED -->
-    <div class="art-card featured">
-      <img src="https://i.imgur.com/NQW2q8F.jpeg" alt="Crown of Thorns" class="art-img">
-      <div class="price-tag">$200 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">Crown of Sorrows</div>
-        <div class="art-desc">Lápiz + tinta roja · Técnica mixta · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$200 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Angel draped (IMG 11) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/9lhezdn.jpeg" alt="Ángel" class="art-img">
-      <div class="price-tag">$180 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">Ascensión</div>
-        <div class="art-desc">Lápiz grafito · A4 · Alto detalle en telas</div>
-        <div class="art-price-row">
-          <span class="art-price">$180 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Horror face (IMG 2) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/GTs08o1.jpeg" alt="Dark Portrait" class="art-img">
-      <div class="price-tag">$150 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">Duality</div>
-        <div class="art-desc">Grafito · Retrato oscuro · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$150 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Jesus (IMG 7) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/gEwcTKL.jpeg" alt="Cristo" class="art-img">
-      <div class="price-tag">$160 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">Ecce Homo</div>
-        <div class="art-desc">Grafito · Retrato religioso · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$160 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Car scene (IMG 4) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/erOZd41.jpeg" alt="Car Scene" class="art-img">
-      <div class="price-tag">$130 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">Neon Garage</div>
-        <div class="art-desc">Grafito · Escena de auto · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$130 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Anime mage (IMG 8) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/UgvMO32.jpeg" alt="Mage" class="art-img">
-      <div class="price-tag">$200 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">La Maga</div>
-        <div class="art-desc">Lápices de color · Anime style · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$200 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dark creature (IMG 9) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/fdn928h.jpeg" alt="Creature" class="art-img">
-      <div class="price-tag">$120 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">Despertar</div>
-        <div class="art-desc">Grafito · Criatura oscura · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$120 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Racing car (IMG 5) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/dunDibl.jpeg" alt="Racing Car" class="art-img">
-      <div class="price-tag">$100 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">GT Sketch</div>
-        <div class="art-desc">Grafito · Auto de carreras · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$100 MXN</span>
-          <span class="art-badge original">Original</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Moto (IMG 1) -->
-    <div class="art-card">
-      <img src="https://i.imgur.com/c96QHft.jpeg" alt="Moto" class="art-img">
-      <div class="price-tag">$80 MXN</div>
-      <div class="art-overlay">
-        <div class="art-title">Speed Draft</div>
-        <div class="art-desc">Grafito · Boceto de moto · A4</div>
-        <div class="art-price-row">
-          <span class="art-price">$80 MXN</span>
-          <span class="art-badge print">Boceto</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- COMMISSIONS -->
-<section id="commissions" class="commissions-section">
-  <div class="section-divider">
-    <span>✦ Comisiones</span>
-    <div class="divider-line"></div>
-    <span>Precios</span>
-  </div>
-
-  <div class="commissions-grid">
-
-    <div class="commission-tier">
-      <div class="tier-name">Boceto</div>
-      <div class="tier-price">$50</div>
-      <div class="tier-price-sub">MXN por pieza</div>
-      <ul class="tier-features">
-        <li>Lápiz grafito</li>
-        <li>1 personaje / objeto</li>
-        <li>Sin fondo complejo</li>
-        <li>Formato A5</li>
-        <li>Entrega digital + física</li>
-      </ul>
-      <a href="#contact" class="btn-tier">Solicitar</a>
-    </div>
-
-    <div class="commission-tier popular">
-      <div class="tier-name">Retrato</div>
-      <div class="tier-price">$120</div>
-      <div class="tier-price-sub">MXN por pieza</div>
-      <ul class="tier-features">
-        <li>Grafito detallado</li>
-        <li>Busto o medio cuerpo</li>
-        <li>Fondo simple</li>
-        <li>Formato A4</li>
-        <li>Alta calidad de acabado</li>
-      </ul>
-      <a href="#contact" class="btn-tier">Solicitar</a>
-    </div>
-
-    <div class="commission-tier">
-      <div class="tier-name">Full Piece</div>
-      <div class="tier-price">$180</div>
-      <div class="tier-price-sub">MXN por pieza</div>
-      <ul class="tier-features">
-        <li>Grafito o color</li>
-        <li>Cuerpo completo</li>
-        <li>Fondo elaborado</li>
-        <li>Formato A4</li>
-        <li>Revisiones incluidas</li>
-      </ul>
-      <a href="#contact" class="btn-tier">Solicitar</a>
-    </div>
-
-    <div class="commission-tier">
-      <div class="tier-name">Arte Oscuro</div>
-      <div class="tier-price">$200</div>
-      <div class="tier-price-sub">MXN por pieza</div>
-      <ul class="tier-features">
-        <li>Tema gore / horror</li>
-        <li>Composición libre</li>
-        <li>Técnica mixta opcional</li>
-        <li>Formato A4</li>
-        <li>Concepto único</li>
-      </ul>
-      <a href="#contact" class="btn-tier">Solicitar</a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about" class="about-section">
-  <div class="about-text">
-    <h2>El arte<br>es <em>oscuro</em><br>y honesto.</h2>
-    <p>Artista independiente de la Sierra Gorda de Querétaro. Trabajo principalmente con grafito y lápices de color, explorando el retrato, el diseño automotriz y la ilustración oscura.</p>
-    <p>Cada pieza es hecha a mano, desde el boceto hasta el acabado final. Sin atajos, sin prints genéricos — arte real con identidad propia.</p>
-    <div class="about-stats">
-      <div class="stat">
-        <div class="stat-num">11+</div>
-        <div class="stat-label">Piezas en portafolio</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">3+</div>
-        <div class="stat-label">Años dibujando</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">100%</div>
-        <div class="stat-label">Hecho a mano</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">✦</div>
-        <div class="stat-label">Commissions Open</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="about-visual">
-    <div class="about-quote">
-      El papel no miente. Cada trazo es una decisión — y cada sombra, una verdad.
-      <div class="quote-attr">— Monarch Art</div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="contact-section">
-  <div class="section-divider" style="justify-content:center; margin-bottom:2rem;">
-    <span>✦ Contacto</span>
-  </div>
-  <h2>¿Quieres una pieza?</h2>
-  <p>Escríbeme directamente. Cuéntame qué tienes en mente y lo hacemos realidad.</p>
-  <div class="contact-methods">
-    <a href="https://instagram.com/" class="contact-link" target="_blank">
-      <span class="icon">📷</span> Instagram
-    </a>
-    <a href="https://tiktok.com/" class="contact-link" target="_blank">
-      <span class="icon">🎵</span> TikTok
-    </a>
-    <a href="https://wa.me/52" class="contact-link" target="_blank">
-      <span class="icon">💬</span> WhatsApp
-    </a>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">MONARCH<span style="color:var(--red)">.</span>ART</div>
-  <div class="footer-tagline">Pinal de Amoles, Querétaro · Sierra Gorda</div>
-  <div class="footer-copy">© 2026 Monarch Art — Todos los derechos reservados</div>
-</footer>
+<!-- Modal promoción -->
+<div class="promotion-modal" id="promoModal">
+  <h3>PROMOCIÓN DE PEÓN</h3>
+  <div class="promo-choices" id="promoChoices"></div>
+</div>
 
 <script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const trail = document.getElementById('cursorTrail');
-  let mx = 0, my = 0, tx = 0, ty = 0;
+// ===================== PIEZAS =====================
+const PIECES = {
+  wK:'♔', wQ:'♕', wR:'♖', wB:'♗', wN:'♘', wP:'♙',
+  bK:'♚', bQ:'♛', bR:'♜', bB:'♝', bN:'♞', bP:'♟'
+};
 
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx - 6 + 'px';
-    cursor.style.top = my - 6 + 'px';
+// Estado inicial
+function initBoard() {
+  return [
+    ['bR','bN','bB','bQ','bK','bB','bN','bR'],
+    ['bP','bP','bP','bP','bP','bP','bP','bP'],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    ['wP','wP','wP','wP','wP','wP','wP','wP'],
+    ['wR','wN','wB','wQ','wK','wB','wN','wR'],
+  ];
+}
+
+let board, turn, selected, moves, capW, capB, enPassant, castling, promoCallback;
+
+function newGame() {
+  board = initBoard();
+  turn = 'w';
+  selected = null;
+  moves = [];
+  capW = []; capB = [];
+  enPassant = null;
+  castling = { wK: true, wQR: true, wKR: true, bK: true, bQR: true, bKR: true };
+  render();
+  setMsg('Selecciona una pieza');
+  document.getElementById('turnDisplay').textContent = '♔ BLANCAS';
+  document.getElementById('capWhite').textContent = '';
+  document.getElementById('capBlack').textContent = '';
+}
+
+// ===================== RENDERIZAR =====================
+function render() {
+  const boardEl = document.getElementById('board');
+  boardEl.innerHTML = '';
+
+  // Coords
+  const filesEl = document.getElementById('files');
+  filesEl.innerHTML = '';
+  ['a','b','c','d','e','f','g','h'].forEach(f => {
+    const s = document.createElement('span'); s.textContent = f;
+    filesEl.appendChild(s);
   });
-
-  function animTrail() {
-    tx += (mx - tx) * 0.12;
-    ty += (my - ty) * 0.12;
-    trail.style.left = tx - 15 + 'px';
-    trail.style.top = ty - 15 + 'px';
-    requestAnimationFrame(animTrail);
+  const ranksEl = document.getElementById('ranks');
+  ranksEl.innerHTML = '';
+  for (let r = 1; r <= 8; r++) {
+    const s = document.createElement('span'); s.textContent = 9-r;
+    ranksEl.appendChild(s);
   }
-  animTrail();
 
-  // Hover effect on cards
-  document.querySelectorAll('.art-card, .btn-primary, .btn-ghost, .btn-tier, .contact-link').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.transform = 'scale(2)';
-      trail.style.transform = 'scale(1.5)';
+  const kingPos = findKing(turn);
+  const inCheck = kingPos && isInCheck(board, turn, kingPos);
+
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell ' + ((r+c)%2===0 ? 'light':'dark');
+      cell.dataset.r = r; cell.dataset.c = c;
+
+      if (selected && selected.r === r && selected.c === c) cell.classList.add('selected');
+      if (inCheck && kingPos && kingPos.r === r && kingPos.c === c) cell.classList.add('in-check');
+
+      const isMoveTarget = moves.some(m => m.r === r && m.c === c);
+      if (isMoveTarget) {
+        cell.classList.add('movable');
+        if (board[r][c]) cell.classList.add('has-piece');
+      }
+
+      if (board[r][c]) {
+        const piece = document.createElement('span');
+        piece.className = 'piece';
+        piece.textContent = PIECES[board[r][c]];
+        cell.appendChild(piece);
+      }
+
+      cell.addEventListener('click', onCellClick);
+      boardEl.appendChild(cell);
+    }
+  }
+}
+
+// ===================== CLICK =====================
+function onCellClick(e) {
+  const r = parseInt(e.currentTarget.dataset.r);
+  const c = parseInt(e.currentTarget.dataset.c);
+  const piece = board[r][c];
+
+  if (selected) {
+    const move = moves.find(m => m.r === r && m.c === c);
+    if (move) {
+      executeMove(selected.r, selected.c, r, c, move);
+      return;
+    }
+  }
+
+  if (piece && piece[0] === turn) {
+    selected = {r, c};
+    moves = getLegalMoves(board, r, c, enPassant, castling);
+    render();
+    setMsg(null);
+  } else {
+    selected = null; moves = [];
+    render();
+  }
+}
+
+// ===================== EJECUTAR MOVIMIENTO =====================
+function executeMove(fr, fc, tr, tc, move) {
+  const nb = copyBoard(board);
+  const piece = nb[fr][fc];
+  const target = nb[tr][tc];
+
+  // Captura
+  if (target) {
+    if (target[0]==='w') capW.push(PIECES[target]);
+    else capB.push(PIECES[target]);
+  }
+
+  // En passant captura
+  if (move.ep) {
+    const epR = fr; const epC = tc;
+    const epPiece = nb[epR][epC];
+    if (epPiece) { if(epPiece[0]==='w') capW.push(PIECES[epPiece]); else capB.push(PIECES[epPiece]); }
+    nb[epR][epC] = null;
+  }
+
+  nb[tr][tc] = piece;
+  nb[fr][fc] = null;
+
+  // Enroque
+  if (move.castle) {
+    if (move.castle === 'K') { nb[fr][7]=null; nb[fr][5]= turn+'R'; }
+    if (move.castle === 'Q') { nb[fr][0]=null; nb[fr][3]= turn+'R'; }
+  }
+
+  // Actualizar enroque disponible
+  if (piece === 'wK') { castling.wK=false; castling.wQR=false; castling.wKR=false; }
+  if (piece === 'bK') { castling.bK=false; castling.bQR=false; castling.bKR=false; }
+  if (piece === 'wR') { if(fc===0) castling.wQR=false; if(fc===7) castling.wKR=false; }
+  if (piece === 'bR') { if(fc===0) castling.bQR=false; if(fc===7) castling.bKR=false; }
+
+  // En passant nuevo
+  enPassant = null;
+  if ((piece==='wP'||piece==='bP') && Math.abs(tr-fr)===2) {
+    enPassant = {r:(fr+tr)/2, c:tc};
+  }
+
+  board = nb;
+  selected = null; moves = [];
+
+  // Promoción
+  if ((piece==='wP' && tr===0) || (piece==='bP' && tr===7)) {
+    showPromotion(turn, tr, tc, () => {
+      switchTurn();
     });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.transform = 'scale(1)';
-      trail.style.transform = 'scale(1)';
+    return;
+  }
+
+  switchTurn();
+}
+
+function switchTurn() {
+  turn = turn==='w' ? 'b' : 'w';
+  document.getElementById('turnDisplay').textContent = turn==='w' ? '♔ BLANCAS' : '♚ NEGRAS';
+  document.getElementById('capWhite').textContent = capW.join('');
+  document.getElementById('capBlack').textContent = capB.join('');
+
+  const kingPos = findKing(turn);
+  const inCheck = kingPos && isInCheck(board, turn, kingPos);
+  const allMoves = getAllLegalMoves(board, turn, enPassant, castling);
+
+  if (allMoves.length === 0) {
+    if (inCheck) {
+      const winner = turn==='w'?'NEGRAS':'BLANCAS';
+      setMsg(`¡JAQUE MATE! Ganan las ${winner} 🏆`);
+    } else {
+      setMsg('¡TABLAS por ahogado!');
+    }
+    render();
+    return;
+  }
+
+  if (inCheck) setMsg('¡JAQUE!');
+  else setMsg('Selecciona una pieza');
+  render();
+}
+
+// ===================== PROMOCIÓN =====================
+function showPromotion(color, r, c, cb) {
+  const modal = document.getElementById('promoModal');
+  const choices = document.getElementById('promoChoices');
+  choices.innerHTML = '';
+  const opts = color==='w'
+    ? ['wQ','wR','wB','wN']
+    : ['bQ','bR','bB','bN'];
+  opts.forEach(p => {
+    const btn = document.createElement('div');
+    btn.className = 'promo-btn';
+    btn.textContent = PIECES[p];
+    btn.addEventListener('click', () => {
+      board[r][c] = p;
+      modal.classList.remove('show');
+      cb();
     });
+    choices.appendChild(btn);
   });
+  modal.classList.add('show');
+}
 
-  // Fade in on scroll
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
+// ===================== LÓGICA DE MOVIMIENTOS =====================
+function getLegalMoves(b, r, c, ep, cas) {
+  const piece = b[r][c];
+  if (!piece) return [];
+  const color = piece[0];
+  const raw = getRawMoves(b, r, c, ep, cas);
+  return raw.filter(m => {
+    const nb = copyBoard(b);
+    const p = nb[r][c];
+    if (m.ep) nb[r][m.c] = null;
+    nb[m.r][m.c] = p;
+    nb[r][c] = null;
+    if (m.castle==='K') { nb[r][7]=null; nb[r][5]=color+'R'; }
+    if (m.castle==='Q') { nb[r][0]=null; nb[r][3]=color+'R'; }
+    const kp = findKingIn(nb, color);
+    return kp && !isInCheck(nb, color, kp);
+  });
+}
+
+function getAllLegalMoves(b, color, ep, cas) {
+  let all = [];
+  for (let r=0;r<8;r++) for(let c=0;c<8;c++) {
+    if (b[r][c] && b[r][c][0]===color) {
+      all = all.concat(getLegalMoves(b,r,c,ep,cas));
+    }
+  }
+  return all;
+}
+
+function getRawMoves(b, r, c, ep, cas) {
+  const piece = b[r][c];
+  if (!piece) return [];
+  const color = piece[0];
+  const type = piece[1];
+  const opp = color==='w'?'b':'w';
+  const moves = [];
+
+  const add = (tr,tc,extra={}) => {
+    if(tr<0||tr>7||tc<0||tc>7) return false;
+    const t = b[tr][tc];
+    if(t && t[0]===color) return false;
+    moves.push({r:tr,c:tc,...extra});
+    return !t;
+  };
+
+  const slide = (dirs) => {
+    dirs.forEach(([dr,dc])=>{
+      let nr=r+dr,nc=c+dc;
+      while(nr>=0&&nr<8&&nc>=0&&nc<8) {
+        const t=b[nr][nc];
+        if(t&&t[0]===color) break;
+        moves.push({r:nr,c:nc});
+        if(t) break;
+        nr+=dr; nc+=dc;
       }
     });
-  }, { threshold: 0.1 });
+  };
 
-  document.querySelectorAll('.art-card, .commission-tier, .stat').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-  });
+  if (type==='P') {
+    const dir = color==='w'?-1:1;
+    const start = color==='w'?6:1;
+    // Avanzar
+    if (!b[r+dir]?.[c]) {
+      moves.push({r:r+dir,c});
+      if (r===start && !b[r+2*dir]?.[c]) moves.push({r:r+2*dir,c});
+    }
+    // Captura diagonal
+    [-1,1].forEach(dc=>{
+      const tr=r+dir, tc=c+dc;
+      if(tr>=0&&tr<8&&tc>=0&&tc<8){
+        if(b[tr][tc]&&b[tr][tc][0]===opp) moves.push({r:tr,c:tc});
+        // En passant
+        if(ep&&ep.r===tr&&ep.c===tc) moves.push({r:tr,c:tc,ep:true});
+      }
+    });
+  }
+
+  if (type==='N') {
+    [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]
+      .forEach(([dr,dc])=>add(r+dr,c+dc));
+  }
+
+  if (type==='B') slide([[-1,-1],[-1,1],[1,-1],[1,1]]);
+  if (type==='R') slide([[-1,0],[1,0],[0,-1],[0,1]]);
+  if (type==='Q') slide([[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]]);
+
+  if (type==='K') {
+    [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]
+      .forEach(([dr,dc])=>add(r+dr,c+dc));
+    // Enroque
+    const row = color==='w'?7:0;
+    if (r===row && c===4) {
+      if (cas[color+'K'] && cas[color+'KR'] && !b[row][5] && !b[row][6]) {
+        // Verificar que las casillas intermedias no estén en jaque
+        const nb1=copyBoard(b); nb1[row][4]=null; nb1[row][5]=color+'K';
+        const nb2=copyBoard(b); nb2[row][4]=null; nb2[row][6]=color+'K';
+        const kp1={r:row,c:5}; const kp2={r:row,c:6};
+        if(!isInCheck(b,color,{r:row,c:4})&&!isInCheck(nb1,color,kp1)&&!isInCheck(nb2,color,kp2))
+          moves.push({r:row,c:6,castle:'K'});
+      }
+      if (cas[color+'K'] && cas[color+'QR'] && !b[row][3] && !b[row][2] && !b[row][1]) {
+        const nb1=copyBoard(b); nb1[row][4]=null; nb1[row][3]=color+'K';
+        const nb2=copyBoard(b); nb2[row][4]=null; nb2[row][2]=color+'K';
+        const kp1={r:row,c:3}; const kp2={r:row,c:2};
+        if(!isInCheck(b,color,{r:row,c:4})&&!isInCheck(nb1,color,kp1)&&!isInCheck(nb2,color,kp2))
+          moves.push({r:row,c:2,castle:'Q'});
+      }
+    }
+  }
+
+  return moves;
+}
+
+function isInCheck(b, color, kp) {
+  const opp = color==='w'?'b':'w';
+  for (let r=0;r<8;r++) for(let c=0;c<8;c++) {
+    if (b[r][c] && b[r][c][0]===opp) {
+      const raw = getRawMoves(b,r,c,null,{wK:false,bK:false,wQR:false,wKR:false,bQR:false,bKR:false});
+      if (raw.some(m=>m.r===kp.r&&m.c===kp.c)) return true;
+    }
+  }
+  return false;
+}
+
+function findKing(color) {
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++)
+    if(board[r][c]===color+'K') return {r,c};
+  return null;
+}
+
+function findKingIn(b, color) {
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++)
+    if(b[r][c]===color+'K') return {r,c};
+  return null;
+}
+
+function copyBoard(b) { return b.map(row=>[...row]); }
+function setMsg(txt) { if(txt) document.getElementById('msgBox').textContent = txt; }
+
+document.getElementById('resetBtn').addEventListener('click', newGame);
+newGame();
 </script>
-
 </body>
 </html>
